@@ -21,6 +21,10 @@ public class DocumentService {
         return documentRepository.save(document);
     }
 
+    public Document findDocumentByName(String name) {
+        return documentRepository.findDocumentByName(name);
+    }
+
     public Optional<Document> findById(Long id) {
         return documentRepository.findById(id);
     }
