@@ -61,6 +61,7 @@ public class UserHandler {
         }
     }
 
+
     public ResponseEntity<?> update(Long id, UserDto userDto) throws ResourceNotFound {
         User user = userMapper.toUser(userDto);
         User userById = userService.findById(id)
