@@ -61,7 +61,6 @@ public class UserHandler {
         }
     }
 
-
     public ResponseEntity<?> update(Long id, UserDto userDto) throws ResourceNotFound {
         User user = userMapper.toUser(userDto);
         User userById = userService.findById(id)
@@ -120,15 +119,15 @@ public class UserHandler {
         PasswordResetToken token = passwordTokenService.getResetToken(resetToken);
         System.out.println("token:  "+token);
         if(token.getToken().isEmpty()){
-            return ResponseEntity.status(404).body(new Response("This reset token not found......"));
+            return ResponseEntity.status(404).body("This reset token not found......");
         }
         String result = passwordUtil.validatePasswordResetToken(resetToken);
         if(result != null){
-            return  ResponseEntity.status(401).body(new Response("Reset Token Expired......"));
+            return  ResponseEntity.status(401).body("Reset Token Expired......");
         }
         String email = token.getUser().getEmail();
         userService.updatePassword(email,user.getPassword());
-        return ResponseEntity.status(200).body(new Response("the password changed....."));
+        return ResponseEntity.status(200).body("the password changed.....");
     }
 
     public ResponseEntity<?> changeUserPassword(UserDto userDto, String newPassword) {
@@ -138,9 +137,9 @@ public class UserHandler {
         BCryptPasswordEncoder passwordEncoder =new BCryptPasswordEncoder();
         if(passwordEncoder.matches(user.getPassword(),userId.getPassword())){
             userService.updatePassword(email,newPassword);
-            return ResponseEntity.status(200).body(new Response("successfully updated......"));
+            return ResponseEntity.status(200).body("successfully updated......");
         }
-        else return ResponseEntity.status(403).body(new Response("incorrect password"));
+        else return ResponseEntity.status(403).body("incorrect password");
     }
 
 }
