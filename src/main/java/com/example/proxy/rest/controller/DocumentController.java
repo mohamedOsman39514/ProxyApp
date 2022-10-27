@@ -23,19 +23,19 @@ public class DocumentController {
 
     @PostMapping("/{id}")
     @Operation(summary = "upload document by the request id")
-    public ResponseEntity<?> uploadDocument(@PathVariable Long id, @RequestParam("image") MultipartFile file) throws IOException, ResourceNotFound {
+    public ResponseEntity<?> uploadDocument(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException, ResourceNotFound {
         return documentHandler.upload(id, file);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "update document")
-    public ResponseEntity<?> updateDocument(@PathVariable Long id,@RequestParam("image") MultipartFile file) throws IOException, ResourceNotFound {
+    public ResponseEntity<?> updateDocument(@PathVariable Long id,@RequestParam("file") MultipartFile file) throws IOException, ResourceNotFound {
         return documentHandler.update(id, file);
     }
 
     @GetMapping("/{name}")
     @Operation(summary = "find document by name")
-    public ResponseEntity<?> getImageByName(@PathVariable("name") String name) throws IOException {
+    public ResponseEntity<?> getImageByName(@PathVariable String name) throws IOException {
         return documentHandler.getByName(name);
     }
 

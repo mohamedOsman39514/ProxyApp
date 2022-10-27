@@ -15,6 +15,6 @@ public class ServiceRequestDto extends RestDto {
 
     private LocalDate endDate;
 
-    private Request request;
+    private RequestDto request;
 
 }

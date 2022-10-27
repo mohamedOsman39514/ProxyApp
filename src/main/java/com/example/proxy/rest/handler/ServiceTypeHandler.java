@@ -32,7 +32,8 @@ public class ServiceTypeHandler {
         try {
             ServiceType serviceType = serviceTypeMapper.toServiceType(serviceTypeDto);
             serviceTypeService.save(serviceType);
-            return ResponseEntity.status(HttpStatus.CREATED).body(serviceType);
+            ServiceTypeDto serviceTypeDto1 = serviceTypeMapper.toServiceTypeDto(serviceType);
+            return ResponseEntity.status(HttpStatus.CREATED).body(serviceTypeDto1);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(
                     new Response(psqlException.getError(ex)));

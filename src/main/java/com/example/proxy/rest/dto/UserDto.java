@@ -16,6 +16,8 @@ public class UserDto extends RestDto {
 
     private String job;
 
+    private String jobPlace;
+
     private String nationalId;
 
 }

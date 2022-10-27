@@ -13,6 +13,6 @@ public class DocumentDto extends RestDto {
 
     private byte[] image;
 
-    private Request request;
+    private RequestDto request;
 
 }

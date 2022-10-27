@@ -9,6 +9,6 @@ public class ServiceTypeDto extends RestDto {
 
     private String name;
 
-    private ServiceDefinition service;
+    private ServiceDefinitionDto service;
 
 }

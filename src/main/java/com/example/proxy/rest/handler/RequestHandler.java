@@ -43,13 +43,12 @@ public class RequestHandler {
         Request request = requestMapper.toRequest(requestDto);
         Request requestById = requestService.findById(id)
                 .orElseThrow(() -> new ResourceNotFound("request of id " + id + " Not Found"));
-        requestById.setStatus(request.getStatus() != null ? request.getStatus() : requestById.getStatus());
+        requestById.setStatus(request.getStatus() == null ? request.getStatus() : requestById.getStatus());
         requestService.save(requestById);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(requestById);
     }
 
-    public ResponseEntity<RequestDto> getById(Long id)
-            throws ResourceNotFound {
+    public ResponseEntity<RequestDto> getById(Long id) throws ResourceNotFound {
         Request request = requestService.findById(id)
                 .orElseThrow(() -> new ResourceNotFound("The request of id " + id + " Not Found"));
         RequestDto requestDto = requestMapper.toRequestDto(request);

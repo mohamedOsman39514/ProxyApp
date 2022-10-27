@@ -3,9 +3,11 @@ package com.example.proxy.rest.handler;
 import com.example.proxy.model.Document;
 import com.example.proxy.model.Request;
 import com.example.proxy.rest.dto.DocumentDto;
+import com.example.proxy.rest.dto.RequestDto;
 import com.example.proxy.rest.exception.ResourceNotFound;
 import com.example.proxy.rest.exception.Response;
 import com.example.proxy.rest.mapper.DocumentMapper;
+import com.example.proxy.rest.mapper.RequestMapper;
 import com.example.proxy.service.DocumentService;
 import com.example.proxy.service.RequestService;
 import com.example.proxy.utils.DocumentUtil;
@@ -30,17 +32,21 @@ public class DocumentHandler {
     private DocumentMapper documentMapper;
 
     @Autowired
+    private RequestMapper requestMapper;
+
+    @Autowired
     private RequestService requestService;
 
 
     public ResponseEntity<?> upload(Long id, MultipartFile file) throws IOException, ResourceNotFound {
         Request request = requestService.findById(id)
                 .orElseThrow(() -> new ResourceNotFound("The Request of id " + id + " Not Found"));
+        RequestDto requestDto = requestMapper.toRequestDto(request);
         DocumentDto documentDto = new DocumentDto();
         documentDto.setName(file.getOriginalFilename());
         documentDto.setType(file.getContentType());
         documentDto.setImage(DocumentUtil.compressImage(file.getBytes()));
-        documentDto.setRequest(request);
+        documentDto.setRequest(requestDto);
         Document document = documentMapper.toDocument(documentDto);
         documentService.save(document);
         return ResponseEntity.status(HttpStatus.OK)
