@@ -45,14 +45,14 @@ public class ServiceRequestHandler {
             User user = userService.findByEmail(email);
             ServiceRequest serviceRequest = serviceRequestMapper.toServiceRequest(serviceRequestDto);
             Request request = requestService.findById(serviceRequest.getRequest().getId()).get();
-            if(request.getUser().getId() != user.getId()){
-                return ResponseEntity.status(HttpStatus.FOUND).body(new Response("This Request Not Belongs to You"));
-            }
-            if(request.getStatus() == null){
-                return ResponseEntity.status(HttpStatus.FOUND).body(new Response("Your Request Under Investigation"));
-            } else if (request.getStatus() == false) {
-                return ResponseEntity.status(HttpStatus.FOUND).body(new Response("Your Request Refused"));
-            }
+//            if(request.getUser().getId() != user.getId()){
+//                return ResponseEntity.status(HttpStatus.FOUND).body(new Response("This Request Not Belongs to You"));
+//            }
+//            if(request.getStatus() == null){
+//                return ResponseEntity.status(HttpStatus.FOUND).body(new Response("Your Request Under Investigation"));
+//            } else if (request.getStatus() == false) {
+//                return ResponseEntity.status(HttpStatus.FOUND).body(new Response("Your Request Refused"));
+//            }
             serviceRequestService.save(serviceRequest);
             return ResponseEntity.status(HttpStatus.CREATED).body(serviceRequest);
         } catch (Exception ex) {

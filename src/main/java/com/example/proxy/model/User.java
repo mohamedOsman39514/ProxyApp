@@ -34,6 +34,9 @@ public class User extends JPA {
     @Column
     private String jobPlace;
 
+    @Column
+    private String address;
+
     @Column(unique = true)
     private String nationalId;
 

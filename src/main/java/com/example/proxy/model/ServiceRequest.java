@@ -19,12 +19,25 @@ public class ServiceRequest extends JPA {
     private Integer amount;
 
     @Column
+    private Integer deservedAmount;
+
+    @Column
+    private Integer paidAmount;
+
+    @Column
+    private Integer remainingAmount;
+
+    @Column
     private LocalDate startDate;
 
     @Column
     private LocalDate endDate;
 
+    @Column
+    private String recipient;
+
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "request_id")
     private Request request;
 
 }

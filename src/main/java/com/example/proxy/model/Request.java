@@ -15,15 +15,16 @@ import java.util.List;
 @AllArgsConstructor
 public class Request extends JPA {
 
-    @Column
-    private Boolean status;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "status_id")
+    private Status status;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "service_type_id")
     private ServiceType serviceType;
 
     @OneToMany(fetch = FetchType.EAGER)
-//    @JoinColumn(referencedColumnName = "request_id")
+    @JoinColumn(name = "request_id")
     private List<Request> requests;
 
     @ManyToOne(fetch = FetchType.EAGER)

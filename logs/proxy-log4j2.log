@@ -1,35 +1,24 @@
-2022-10-27 12:04:23,163 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 6.2.5.Final
-2022-10-27 12:04:23,263 INFO o.s.b.StartupInfoLogger [main] Starting ProxyApplication using Java 18.0.2 on DESKTOP-9NIOTDB with PID 8356 (R:\SpringAPI\Tasks\proxy\target\classes started by dell in R:\SpringAPI\Tasks\proxy)
-2022-10-27 12:04:23,276 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
-2022-10-27 12:04:25,120 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2022-10-27 12:04:25,271 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 137 ms. Found 7 JPA repository interfaces.
-2022-10-27 12:04:27,617 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
-2022-10-27 12:04:27,655 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
-2022-10-27 12:04:27,657 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
-2022-10-27 12:04:27,657 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.65]
-2022-10-27 12:04:27,917 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
-2022-10-27 12:04:27,918 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 4489 ms
-2022-10-27 12:04:28,366 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
-2022-10-27 12:04:28,477 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 5.6.11.Final
-2022-10-27 12:04:28,779 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
-2022-10-27 12:04:29,047 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
-2022-10-27 12:04:29,505 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
-2022-10-27 12:04:29,542 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
-2022-10-27 12:04:31,748 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2022-10-27 12:04:31,762 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
-2022-10-27 12:04:32,615 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2022-10-27 12:04:33,879 INFO o.s.s.w.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@141c66db, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@18f794e, org.springframework.security.web.context.SecurityContextPersistenceFilter@593e594f, org.springframework.security.web.header.HeaderWriterFilter@951461a, org.springframework.security.web.authentication.logout.LogoutFilter@1fc4b8d6, com.example.proxy.security.jwt.JwtFilter@4edd8a0a, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7866fe3e, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5466a819, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@389a9ff6, org.springframework.security.web.session.SessionManagementFilter@79735611, org.springframework.security.web.access.ExceptionTranslationFilter@7c9c7e7d, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5c648e38]
-2022-10-27 12:04:34,469 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
-2022-10-27 12:04:34,542 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
-2022-10-27 12:04:34,562 INFO o.s.b.StartupInfoLogger [main] Started ProxyApplication in 11.971 seconds (JVM running for 13.566)
-2022-10-27 12:07:24,889 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
-2022-10-27 12:07:24,889 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
-2022-10-27 12:07:24,891 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 1 ms
-2022-10-27 12:15:32,395 WARN o.h.e.j.s.SqlExceptionHelper [http-nio-8080-exec-2] SQL Error: 0, SQLState: 23505
-2022-10-27 12:15:32,396 ERROR o.h.e.j.s.SqlExceptionHelper [http-nio-8080-exec-2] ERROR: duplicate key value violates unique constraint "uk_1yd9b4juo3xr9jpbtse65f40x"
-  Detail: Key (requests_id)=(2) already exists.
-2022-10-27 12:15:32,402 INFO o.h.e.j.b.i.AbstractBatchImpl [http-nio-8080-exec-2] HHH000010: On release of batch it still contained JDBC statements
-2022-10-27 12:16:10,221 WARN o.h.e.j.s.SqlExceptionHelper [http-nio-8080-exec-1] SQL Error: 0, SQLState: 23505
-2022-10-27 12:16:10,222 ERROR o.h.e.j.s.SqlExceptionHelper [http-nio-8080-exec-1] ERROR: duplicate key value violates unique constraint "uk_1yd9b4juo3xr9jpbtse65f40x"
-  Detail: Key (requests_id)=(2) already exists.
-2022-10-27 12:16:10,222 INFO o.h.e.j.b.i.AbstractBatchImpl [http-nio-8080-exec-1] HHH000010: On release of batch it still contained JDBC statements
+2022-10-27 13:58:06,880 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 6.2.5.Final
+2022-10-27 13:58:06,978 INFO o.s.b.StartupInfoLogger [main] Starting ProxyApplication using Java 18.0.2 on DESKTOP-9NIOTDB with PID 15728 (R:\SpringAPI\Tasks\proxy\target\classes started by dell in R:\SpringAPI\Tasks\proxy)
+2022-10-27 13:58:06,993 INFO o.s.b.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2022-10-27 13:58:09,089 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2022-10-27 13:58:09,251 INFO o.s.d.r.c.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 145 ms. Found 8 JPA repository interfaces.
+2022-10-27 13:58:10,930 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat initialized with port(s): 8080 (http)
+2022-10-27 13:58:10,971 INFO o.a.j.l.DirectJDKLog [main] Initializing ProtocolHandler ["http-nio-8080"]
+2022-10-27 13:58:10,972 INFO o.a.j.l.DirectJDKLog [main] Starting service [Tomcat]
+2022-10-27 13:58:10,973 INFO o.a.j.l.DirectJDKLog [main] Starting Servlet engine: [Apache Tomcat/9.0.65]
+2022-10-27 13:58:11,285 INFO o.a.j.l.DirectJDKLog [main] Initializing Spring embedded WebApplicationContext
+2022-10-27 13:58:11,285 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [main] Root WebApplicationContext: initialization completed in 4133 ms
+2022-10-27 13:58:11,720 INFO o.h.j.i.u.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2022-10-27 13:58:11,845 INFO o.h.Version [main] HHH000412: Hibernate ORM core version 5.6.11.Final
+2022-10-27 13:58:12,138 INFO o.h.a.c.r.j.JavaReflectionManager [main] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2022-10-27 13:58:12,371 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Starting...
+2022-10-27 13:58:12,821 INFO c.z.h.HikariDataSource [main] HikariPool-1 - Start completed.
+2022-10-27 13:58:12,866 INFO o.h.d.Dialect [main] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2022-10-27 13:58:14,915 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2022-10-27 13:58:14,929 INFO o.s.o.j.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2022-10-27 13:58:15,769 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-10-27 13:58:17,123 INFO o.s.s.w.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4fe3199d, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@58ebfbcb, org.springframework.security.web.context.SecurityContextPersistenceFilter@2468c0e4, org.springframework.security.web.header.HeaderWriterFilter@6b247ef6, org.springframework.security.web.authentication.logout.LogoutFilter@60317de8, com.example.proxy.security.jwt.JwtFilter@43201f84, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@1a82453, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@40da1644, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@68a7f77a, org.springframework.security.web.session.SessionManagementFilter@5b5f61cc, org.springframework.security.web.access.ExceptionTranslationFilter@638e8194, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@48dc9950]
+2022-10-27 13:58:17,729 INFO o.a.j.l.DirectJDKLog [main] Starting ProtocolHandler ["http-nio-8080"]
+2022-10-27 13:58:17,786 INFO o.s.b.w.e.t.TomcatWebServer [main] Tomcat started on port(s): 8080 (http) with context path ''
+2022-10-27 13:58:17,804 INFO o.s.b.StartupInfoLogger [main] Started ProxyApplication in 11.853 seconds (JVM running for 14.486)

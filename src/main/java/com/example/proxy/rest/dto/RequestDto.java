@@ -1,5 +1,6 @@
 package com.example.proxy.rest.dto;
 
+import com.example.proxy.model.Status;
 import com.example.proxy.rest.dto.common.RestDto;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class RequestDto extends RestDto {
 
-    private Boolean status;
+    private StatusDto status;
 
     private ServiceTypeDto serviceType;
 

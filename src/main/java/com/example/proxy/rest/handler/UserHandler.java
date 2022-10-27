@@ -70,6 +70,8 @@ public class UserHandler {
         userById.setNationalId(user.getNationalId() != null ? user.getNationalId() : userById.getNationalId());
         userById.setPhone(user.getPhone() != null ? user.getPhone() : userById.getPhone());
         userById.setJob(user.getJob() != null ? user.getJob() : userById.getJob());
+        userById.setJobPlace(user.getJobPlace() != null ? user.getJobPlace() : userById.getJobPlace());
+        userById.setAddress(user.getAddress() != null ? user.getAddress() : userById.getAddress());
         userService.save(userById);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userById);
     }
