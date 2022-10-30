@@ -2,8 +2,7 @@ package com.example.proxy.rest.controller;
 
 import com.example.proxy.model.User;
 import com.example.proxy.rest.handler.AuthHandler;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 
+@AllArgsConstructor
 @RestController
-@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
     private AuthHandler authHandler;
 
 
@@ -25,9 +23,8 @@ public class AuthController {
         return authHandler.createToken(user);
     }
 
-
-    @RequestMapping(value = "/refreshtoken", method = RequestMethod.GET)
-    public ResponseEntity<?> refreshtoken(HttpServletRequest request) throws Exception {
+    @GetMapping(value = "/refreshToken")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) throws Exception {
         return authHandler.refreshtoken(request);
 
     }

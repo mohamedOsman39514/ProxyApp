@@ -1,20 +1,20 @@
 package com.example.proxy.model;
 
-import com.example.proxy.model.common.JPA;
+import com.example.proxy.model.common.JPAModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "employee")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends JPA {
+public class User extends JPAModel {
 
     @Column
     private String name;
@@ -26,18 +26,28 @@ public class User extends JPA {
     private String password;
 
     @Column
-    private Integer phone;
+    private String phone;
 
-    @Column
-    private String job;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_id")
+    private Job job;
 
-    @Column
-    private String jobPlace;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "party_id")
+    private Party party;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "governorate_id")
+    private Governorate governorate;
 
     @Column
     private String address;
 
     @Column(unique = true)
     private String nationalId;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "roles_id")
+    private List<Role> roles = new ArrayList<>();
 
 }

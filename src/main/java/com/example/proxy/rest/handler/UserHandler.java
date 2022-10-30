@@ -3,7 +3,7 @@ package com.example.proxy.rest.handler;
 import com.example.proxy.model.PasswordResetToken;
 import com.example.proxy.model.User;
 import com.example.proxy.rest.dto.UserDto;
-import com.example.proxy.rest.exception.PSQLException;
+import com.example.proxy.rest.exception.SQLException;
 import com.example.proxy.rest.exception.ResourceNotFound;
 import com.example.proxy.rest.exception.Response;
 import com.example.proxy.rest.mapper.UserMapper;
@@ -20,8 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -31,23 +29,23 @@ import java.util.UUID;
 @AllArgsConstructor
 @Log4j2
 public class UserHandler {
-    @Autowired
+//    @Autowired
     private UserMapper userMapper;
 
-    @Autowired
+//    @Autowired
     private UserService userService;
 
-    @Autowired
+//    @Autowired
     private PasswordTokenService passwordTokenService;
 
-    @Autowired
+//    @Autowired
     private EmailService emailService;
 
-    @Autowired
+//    @Autowired
     private PasswordUtil passwordUtil;
 
-    @Autowired
-    private PSQLException psqlException;
+//    @Autowired
+    private SQLException psqlException;
 
     public ResponseEntity<?> register(UserDto userDto) {
         try {
@@ -70,7 +68,7 @@ public class UserHandler {
         userById.setNationalId(user.getNationalId() != null ? user.getNationalId() : userById.getNationalId());
         userById.setPhone(user.getPhone() != null ? user.getPhone() : userById.getPhone());
         userById.setJob(user.getJob() != null ? user.getJob() : userById.getJob());
-        userById.setJobPlace(user.getJobPlace() != null ? user.getJobPlace() : userById.getJobPlace());
+        userById.setParty(user.getParty() != null ? user.getParty() : userById.getParty());
         userById.setAddress(user.getAddress() != null ? user.getAddress() : userById.getAddress());
         userService.save(userById);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userById);

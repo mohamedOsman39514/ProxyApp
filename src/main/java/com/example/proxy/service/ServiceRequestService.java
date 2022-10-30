@@ -4,6 +4,7 @@ import com.example.proxy.model.Request;
 import com.example.proxy.model.ServiceRequest;
 import com.example.proxy.repository.RequestRepository;
 import com.example.proxy.repository.ServiceRequestRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +13,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ServiceRequestService {
 
-    @Autowired
+//    @Autowired
     private ServiceRequestRepository serviceRequestRepository;
 
 

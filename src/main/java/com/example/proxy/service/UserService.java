@@ -1,9 +1,13 @@
 package com.example.proxy.service;
 
+import com.example.proxy.model.Role;
 import com.example.proxy.model.User;
 import com.example.proxy.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,14 +15,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserService implements UserDetailsService {
 
-    @Autowired
+//    @Autowired
     private UserRepository userRepository;
 
     @Override
@@ -27,7 +32,18 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("No user found with email: " + email);
         }
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>()/*getAuthorities(voter.getRoles())*/);
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),getAuthorities(user.getRoles()) );
+    }
+
+    public Collection<? extends GrantedAuthority> getAuthorities(
+            Collection<Role> roles) {
+        List<GrantedAuthority> authorities
+                = new ArrayList<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+            role.getName();
+        }
+        return authorities;
     }
 
     public User register(User user) {

@@ -1,33 +1,33 @@
 package com.example.proxy.model;
 
-import com.example.proxy.model.common.JPA;
+import com.example.proxy.model.common.JPAModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "request")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Request extends JPA {
+public class Request  extends JPAModel {
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
     private Status status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "service_type_id")
     private ServiceType serviceType;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
     @JoinColumn(name = "request_id")
-    private List<Request> requests;
+    private Request parentRequest;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

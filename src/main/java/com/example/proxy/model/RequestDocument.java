@@ -1,6 +1,6 @@
 package com.example.proxy.model;
 
-import com.example.proxy.model.common.JPA;
+import com.example.proxy.model.common.JPAModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Document extends JPA {
+public class RequestDocument extends JPAModel {
 
     @Column
     private String name;
@@ -20,9 +20,12 @@ public class Document extends JPA {
     @Column
     private String type;
 
-    @Column(name = "image", unique = false, nullable = false, length = 100000)
-    private byte[] image;
+    @Column(name = "file", unique = false, nullable = false, length = 100000)
+    private byte[] file;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Column
+    private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private Request request;
 }

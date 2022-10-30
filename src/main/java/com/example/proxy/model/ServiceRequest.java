@@ -1,6 +1,6 @@
 package com.example.proxy.model;
 
-import com.example.proxy.model.common.JPA;
+import com.example.proxy.model.common.JPAModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ServiceRequest extends JPA {
+public class ServiceRequest extends JPAModel {
 
     @Column
     private Integer amount;
@@ -33,10 +33,7 @@ public class ServiceRequest extends JPA {
     @Column
     private LocalDate endDate;
 
-    @Column
-    private String recipient;
-
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "request_id")
     private Request request;
 

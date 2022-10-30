@@ -2,13 +2,12 @@ package com.example.proxy.rest.handler;
 
 import com.example.proxy.model.Request;
 import com.example.proxy.rest.dto.RequestDto;
-import com.example.proxy.rest.exception.PSQLException;
+import com.example.proxy.rest.exception.SQLException;
 import com.example.proxy.rest.exception.ResourceNotFound;
 import com.example.proxy.rest.exception.Response;
 import com.example.proxy.rest.mapper.RequestMapper;
 import com.example.proxy.service.RequestService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -19,14 +18,15 @@ import java.util.List;
 @AllArgsConstructor
 public class RequestHandler {
 
-    @Autowired
+//    @Autowired
     private RequestMapper requestMapper;
 
-    @Autowired
+//    @Autowired
     private RequestService requestService;
 
-    @Autowired
-    private PSQLException psqlException;
+//    @Autowired
+    private SQLException psqlException;
+
 
     public ResponseEntity<?> create(RequestDto requestDto) {
         try {

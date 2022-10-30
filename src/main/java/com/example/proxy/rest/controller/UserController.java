@@ -5,8 +5,7 @@ import com.example.proxy.rest.exception.ResourceNotFound;
 import com.example.proxy.rest.handler.UserHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,13 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RestController
 @RequestMapping("/user")
 @Tag(name = "User", description = "Rest Api For User")
 public class UserController {
 
-    @Autowired
     private UserHandler userHandler;
 
 

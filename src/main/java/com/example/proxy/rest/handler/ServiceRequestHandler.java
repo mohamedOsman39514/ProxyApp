@@ -4,7 +4,7 @@ import com.example.proxy.model.Request;
 import com.example.proxy.model.ServiceRequest;
 import com.example.proxy.model.User;
 import com.example.proxy.rest.dto.ServiceRequestDto;
-import com.example.proxy.rest.exception.PSQLException;
+import com.example.proxy.rest.exception.SQLException;
 import com.example.proxy.rest.exception.ResourceNotFound;
 import com.example.proxy.rest.exception.Response;
 import com.example.proxy.rest.mapper.ServiceRequestMapper;
@@ -24,20 +24,20 @@ import java.util.List;
 @AllArgsConstructor
 public class ServiceRequestHandler {
 
-    @Autowired
+//    @Autowired
     private ServiceRequestMapper serviceRequestMapper;
 
-    @Autowired
+//    @Autowired
     private ServiceRequestService serviceRequestService;
 
-    @Autowired
+//    @Autowired
     private RequestService requestService;
 
-    @Autowired
+//    @Autowired
     private UserService userService;
 
-    @Autowired
-    private PSQLException psqlException;
+//    @Autowired
+    private SQLException psqlException;
 
     public ResponseEntity<?> create(ServiceRequestDto serviceRequestDto) {
         try {

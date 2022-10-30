@@ -1,25 +1,21 @@
 package com.example.proxy.rest.controller;
 
-import com.example.proxy.rest.dto.ServiceDefinitionDto;
 import com.example.proxy.rest.exception.ResourceNotFound;
 import com.example.proxy.rest.handler.ServiceDefinitionHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @RestController
 @RequestMapping("/serviceDefinition")
 @Tag(name = "Service Definition", description = "Rest Api For Service Definition")
 public class ServiceDefinitionController {
 
-    @Autowired
     private ServiceDefinitionHandler serviceDefinitionHandler;
 
 
@@ -31,26 +27,26 @@ public class ServiceDefinitionController {
 
     @GetMapping("/{id}")
     @Operation(summary = "get service definition By Id")
-    public ResponseEntity<?> getById(@PathVariable(value = "id") Long id)
-            throws ResourceNotFound {
+    public ResponseEntity<?> getById(@PathVariable(value = "id") Long id) throws ResourceNotFound {
         return serviceDefinitionHandler.getById(id);
     }
 
-    @PostMapping
-    @Operation(summary = "create new service definition")
-    public ResponseEntity<?> create(@Valid @RequestBody ServiceDefinitionDto serviceDefinitionDto) {
-        return serviceDefinitionHandler.create(serviceDefinitionDto);
-    }
+//    @PostMapping
+//    @Operation(summary = "create new service definition")
+//    public ResponseEntity<?> create(@Valid @RequestBody ServiceDefinitionDto serviceDefinitionDto) {
+//        return serviceDefinitionHandler.create(serviceDefinitionDto);
+//    }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "update details for service definition")
-    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ServiceDefinitionDto serviceDefinitionDto) throws ResourceNotFound {
-        return serviceDefinitionHandler.update(id, serviceDefinitionDto);
-    }
-
-    @DeleteMapping("/{id}")
-    @Operation(summary = "delete service definition By Id")
-    public ResponseEntity<?> delete(@PathVariable Long id) throws ResourceNotFound {
-        return serviceDefinitionHandler.delete(id);
-    }
+//    @PutMapping("/{id}")
+//    @Operation(summary = "update details for service definition")
+//    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody ServiceDefinitionDto serviceDefinitionDto) throws ResourceNotFound {
+//        return serviceDefinitionHandler.update(id, serviceDefinitionDto);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    @Operation(summary = "delete service definition By Id")
+//    public ResponseEntity<?> delete(@PathVariable Long id) throws ResourceNotFound {
+//        return serviceDefinitionHandler.delete(id);
+//    }
 }
+
