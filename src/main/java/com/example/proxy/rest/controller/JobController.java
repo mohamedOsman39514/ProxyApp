@@ -1,15 +1,14 @@
 package com.example.proxy.rest.controller;
 
 import com.example.proxy.rest.exception.ResourceNotFound;
+import com.example.proxy.rest.exception.Response;
 import com.example.proxy.rest.handler.JobHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,10 +22,10 @@ public class JobController {
 
     @GetMapping
     @Operation(summary = "get all Job")
-    public ResponseEntity<List<?>> getAll() {
-        return jobHandler.getAll();
+    public ResponseEntity<?> getAll(@RequestParam(value = "page") Integer pageNo, @RequestParam(value = "size") Integer pageSize){
+        if (pageNo <= 0) return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response("no page number: 0"));
+        return jobHandler.getAll(pageNo -1, pageSize);
     }
-
     @GetMapping("/{id}")
     @Operation(summary = "get Job By Id")
     public ResponseEntity<?> getById(@PathVariable(value = "id") Long id) throws ResourceNotFound {

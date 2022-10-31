@@ -2,30 +2,27 @@ package com.example.proxy.rest.handler;
 
 import com.example.proxy.model.Request;
 import com.example.proxy.rest.dto.RequestDto;
+import com.example.proxy.rest.dto.common.PaginationResponse;
 import com.example.proxy.rest.exception.SQLException;
 import com.example.proxy.rest.exception.ResourceNotFound;
 import com.example.proxy.rest.exception.Response;
 import com.example.proxy.rest.mapper.RequestMapper;
 import com.example.proxy.service.RequestService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
 public class RequestHandler {
 
-//    @Autowired
     private RequestMapper requestMapper;
-
-//    @Autowired
     private RequestService requestService;
-
-//    @Autowired
-    private SQLException psqlException;
 
 
     public ResponseEntity<?> create(RequestDto requestDto) {
@@ -34,8 +31,7 @@ public class RequestHandler {
             requestService.save(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(request);
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                    new Response(psqlException.getError(ex)));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new SQLException(ex));
         }
     }
 
@@ -55,9 +51,18 @@ public class RequestHandler {
         return ResponseEntity.ok(requestDto);
     }
 
-    public ResponseEntity<List<?>> getAll() {
-        List<RequestDto> requestDtoList = requestMapper.toRequestDtos(requestService.findAll());
-        return ResponseEntity.ok(requestDtoList);
+    public ResponseEntity<?> getAll(Integer pageNo, Integer pageSize){
+        Page<Request> requests = requestService.getAll(pageNo, pageSize);
+        List<Request> requestList = requests.getContent();
+        List<RequestDto> content= requestList.stream().map(request ->  requestMapper.toRequestDto(request)).collect(Collectors.toList());
+        PaginationResponse paginationResponse = new PaginationResponse();
+        paginationResponse.setContent(content);
+        paginationResponse.setPageNo(requests.getNumber()+1);
+        paginationResponse.setPageSize(requests.getSize());
+        paginationResponse.setTotalElements(requests.getTotalElements());
+        paginationResponse.setTotalPages(requests.getTotalPages());
+
+        return ResponseEntity.ok(paginationResponse);
     }
 
     public ResponseEntity<?> delete(Long id) throws ResourceNotFound {

@@ -2,14 +2,17 @@ package com.example.proxy.rest.handler;
 
 import com.example.proxy.model.Status;
 import com.example.proxy.rest.dto.StatusDto;
+import com.example.proxy.rest.dto.common.PaginationResponse;
 import com.example.proxy.rest.exception.ResourceNotFound;
 import com.example.proxy.rest.mapper.StatusMapper;
 import com.example.proxy.service.StatusService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -48,9 +51,18 @@ public class StatusHandler {
         return ResponseEntity.ok(statusDto);
     }
 
-    public ResponseEntity<List<?>> getAll() {
-        List<StatusDto> serviceDefinitionDtoList = statusMapper.toStatusDtos(statusService.findAll());
-        return ResponseEntity.ok(serviceDefinitionDtoList);
+    public ResponseEntity<?> getAll(Integer pageNo, Integer pageSize){
+        Page<Status> statuses = statusService.getAll(pageNo, pageSize);
+        List<Status> statusList = statuses.getContent();
+        List<StatusDto> content= statusList.stream().map(status ->  statusMapper.toStatusDto(status)).collect(Collectors.toList());
+        PaginationResponse paginationResponse = new PaginationResponse();
+        paginationResponse.setContent(content);
+        paginationResponse.setPageNo(statuses.getNumber()+1);
+        paginationResponse.setPageSize(statuses.getSize());
+        paginationResponse.setTotalElements(statuses.getTotalElements());
+        paginationResponse.setTotalPages(statuses.getTotalPages());
+
+        return ResponseEntity.ok(paginationResponse);
     }
 
 //    public ResponseEntity<?> delete(Long id) throws ResourceNotFound {

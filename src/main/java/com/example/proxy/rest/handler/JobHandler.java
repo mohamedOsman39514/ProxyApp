@@ -1,19 +1,18 @@
 package com.example.proxy.rest.handler;
 
-import com.example.proxy.model.Governorate;
 import com.example.proxy.model.Job;
-import com.example.proxy.rest.dto.GovernorateDto;
 import com.example.proxy.rest.dto.JobDto;
+import com.example.proxy.rest.dto.common.PaginationResponse;
 import com.example.proxy.rest.exception.ResourceNotFound;
-import com.example.proxy.rest.mapper.GovernorateMapper;
 import com.example.proxy.rest.mapper.JobMapper;
-import com.example.proxy.service.GovernorateService;
 import com.example.proxy.service.JobService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -29,8 +28,17 @@ public class JobHandler {
         return ResponseEntity.ok(jobDto);
     }
 
-    public ResponseEntity<List<?>> getAll() {
-        List<?> list = jobMapper.toJobDtos(jobService.findAll());
-        return ResponseEntity.ok(list);
+    public ResponseEntity<?> getAll(Integer pageNo, Integer pageSize){
+        Page<Job> jobs = jobService.getAll(pageNo, pageSize);
+        List<Job> jobList = jobs.getContent();
+        List<JobDto> content= jobList.stream().map(job ->  jobMapper.toJobDto(job)).collect(Collectors.toList());
+        PaginationResponse paginationResponse = new PaginationResponse();
+        paginationResponse.setContent(content);
+        paginationResponse.setPageNo(jobs.getNumber()+1);
+        paginationResponse.setPageSize(jobs.getSize());
+        paginationResponse.setTotalElements(jobs.getTotalElements());
+        paginationResponse.setTotalPages(jobs.getTotalPages());
+
+        return ResponseEntity.ok(paginationResponse);
     }
 }

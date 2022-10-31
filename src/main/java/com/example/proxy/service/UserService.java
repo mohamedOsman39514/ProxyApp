@@ -1,11 +1,14 @@
 package com.example.proxy.service;
 
 import com.example.proxy.model.Role;
+import com.example.proxy.model.Status;
 import com.example.proxy.model.User;
 import com.example.proxy.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -73,11 +76,9 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id);
     }
 
-    public List<User> findAll()
-    {
-        return userRepository.findAll();
+    public Page<User> getAll(Integer page, Integer size) {
+        return userRepository.findAll(PageRequest.of(page, size));
     }
-
     public void deleteById(Long id)
     {
         userRepository.deleteById(id);

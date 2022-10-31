@@ -58,7 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             // other public endpoints of your API may be appended to this array
             "/user/resetPassword/**",
             "/user/forgetPassword",
-            "/user/updatePassword/**"
+            "/user/updatePassword/**",
+            "/role/**"
     };
 
     @Override
@@ -68,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/login","/user/register" ,
-                        "/user/forgetPassword","/swagger-ui.html")
+                        "/user/forgetPassword","/document/**")
                 .permitAll()
                 .antMatchers(AUTH_WHITELIST)
                 .permitAll()

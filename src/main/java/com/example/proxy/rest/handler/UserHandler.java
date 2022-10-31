@@ -3,6 +3,7 @@ package com.example.proxy.rest.handler;
 import com.example.proxy.model.PasswordResetToken;
 import com.example.proxy.model.User;
 import com.example.proxy.rest.dto.UserDto;
+import com.example.proxy.rest.dto.common.PaginationResponse;
 import com.example.proxy.rest.exception.SQLException;
 import com.example.proxy.rest.exception.ResourceNotFound;
 import com.example.proxy.rest.exception.Response;
@@ -14,7 +15,7 @@ import com.example.proxy.utils.email.EmailDetails;
 import com.example.proxy.utils.email.EmailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,28 +25,19 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
 @Log4j2
 public class UserHandler {
-//    @Autowired
+
     private UserMapper userMapper;
-
-//    @Autowired
     private UserService userService;
-
-//    @Autowired
     private PasswordTokenService passwordTokenService;
-
-//    @Autowired
     private EmailService emailService;
-
-//    @Autowired
     private PasswordUtil passwordUtil;
 
-//    @Autowired
-    private SQLException psqlException;
 
     public ResponseEntity<?> register(UserDto userDto) {
         try {
@@ -54,8 +46,7 @@ public class UserHandler {
             userService.register(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                    new Response(psqlException.getError(ex)));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new SQLException(ex));
         }
     }
 
@@ -81,9 +72,18 @@ public class UserHandler {
         return ResponseEntity.ok(userDto);
     }
 
-    public ResponseEntity<List<?>> getAll() {
-        List<?> userDtoList = userMapper.toUserDtos(userService.findAll());
-        return ResponseEntity.ok(userDtoList);
+    public ResponseEntity<?> getAll(Integer pageNo, Integer pageSize){
+        Page<User> users = userService.getAll(pageNo, pageSize);
+        List<User> userList = users.getContent();
+        List<UserDto> content= userList.stream().map(user  ->  userMapper.toUserDto(user)).collect(Collectors.toList());
+        PaginationResponse paginationResponse = new PaginationResponse();
+        paginationResponse.setContent(content);
+        paginationResponse.setPageNo(users.getNumber()+1);
+        paginationResponse.setPageSize(users.getSize());
+        paginationResponse.setTotalElements(users.getTotalElements());
+        paginationResponse.setTotalPages(users.getTotalPages());
+
+        return ResponseEntity.ok(paginationResponse);
     }
 
     public ResponseEntity<?> delete(Long id) throws ResourceNotFound {
@@ -101,13 +101,11 @@ public class UserHandler {
         }
         String token = UUID.randomUUID().toString();
         passwordTokenService.createPasswordResetTokenForUser(userByEmail, token);
-        String appUrl = "http://"+ request.getServerName() + ":"
-                + request.getServerPort() +"/user/resetpassword/"+token;
+        String appUrl = "http://"+ request.getServerName() + ":" + request.getServerPort() +"/user/resetpassword/"+token;
         EmailDetails details = new EmailDetails();
         details.setRecipient(user.getEmail());
         details.setSubject("Reset your password");
-        details.setMsgBody("Forgot your password?" +
-                " Submit a PATCH request with your new password and to:" + appUrl +
+        details.setMsgBody("Forgot your password? Submit a PATCH request with your new password and to:" + appUrl +
                 "\nIf you didn't forget your password, please ignore this email!");
         String status = emailService.sendSimpleMail(details);
         return ResponseEntity.ok().body(new Response("Mail sent Successfully"));
@@ -115,9 +113,7 @@ public class UserHandler {
 
     public ResponseEntity<?> resetPassword(UserDto userDto, String resetToken){
         User user = userMapper.toUser(userDto);
-        System.out.println("resetToken:  "+resetToken);
         PasswordResetToken token = passwordTokenService.getResetToken(resetToken);
-        System.out.println("token:  "+token);
         if(token.getToken().isEmpty()){
             return ResponseEntity.status(404).body(new Response("This reset token not found......"));
         }

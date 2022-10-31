@@ -2,10 +2,12 @@ package com.example.proxy.rest.controller;
 
 import com.example.proxy.rest.dto.ServiceRequestDto;
 import com.example.proxy.rest.exception.ResourceNotFound;
+import com.example.proxy.rest.exception.Response;
 import com.example.proxy.rest.handler.ServiceRequestHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +16,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/serviceRequest")
+@RequestMapping("/service_request")
 @Tag(name = "Service Request", description = "Rest Api For Service Request")
 public class ServiceRequestController {
 
@@ -23,10 +25,10 @@ public class ServiceRequestController {
 
     @GetMapping
     @Operation(summary = "get all service request")
-    public ResponseEntity<List<?>> getAll() {
-        return serviceRequestHandler.getAll();
+    public ResponseEntity<?> getAll(@RequestParam(value = "page") Integer pageNo, @RequestParam(value = "size") Integer pageSize){
+        if (pageNo <= 0) return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response("no page number: 0"));
+        return serviceRequestHandler.getAll(pageNo -1, pageSize);
     }
-
     @GetMapping("/{id}")
     @Operation(summary = "get service request By Id")
     public ResponseEntity<?> getById(@PathVariable(value = "id") Long id)

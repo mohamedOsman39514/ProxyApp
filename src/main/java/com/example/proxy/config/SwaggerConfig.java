@@ -1,30 +1,18 @@
-//package com.example.proxy.config;
-//
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import springfox.documentation.builders.PathSelectors;
-//import springfox.documentation.builders.RequestHandlerSelectors;
-//import springfox.documentation.service.ApiInfo;
-//import springfox.documentation.spi.DocumentationType;
-//import springfox.documentation.spring.web.plugins.Docket;
-//import springfox.documentation.swagger2.annotations.EnableSwagger2;
-//
-//
-//
-//@Configuration
-//@EnableSwagger2
-//public class SwaggerConfig {
-//    @Bean
-//    public Docket api() {
-//        return new Docket(DocumentationType.SWAGGER_2).select()
-//                .apis(RequestHandlerSelectors.any())
-//                .paths(PathSelectors.any())
-//                .build()
-//                .apiInfo(apiInfo());
-//    }
-//
-//    private ApiInfo apiInfo() {
-//        ApiInfo apiInfo = new ApiInfo("My REST API", "Some custom description of API.", "API TOS", "Terms of service", "myeaddress@company.com", "License of API", "API license URL");
-//        return apiInfo;
-//    }
-//}
+package com.example.proxy.config;
+
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@OpenAPIDefinition(info = @Info(title = "My API", version = "v1"))
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
+public class SwaggerConfig {
+}

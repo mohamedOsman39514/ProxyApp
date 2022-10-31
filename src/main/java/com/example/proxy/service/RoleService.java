@@ -21,15 +21,8 @@ public class RoleService {
         return roleRepository.findById(id);
     }
 
-    public List<Role> findAll()
-    {
-        return roleRepository.findAll();
+    public Page<Role> getAll(Integer page, Integer size) {
+        return roleRepository.findAll(PageRequest.of(page, size));
     }
 
-    public List<Role> getPostsList(int page, int size) {
-
-        PageRequest pageReq = PageRequest.of(page, size);
-        Page<Role> posts = roleRepository.findAll(pageReq);
-        return posts.getContent();
-    }
 }

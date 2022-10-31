@@ -6,28 +6,22 @@ import com.example.proxy.security.jwt.JwtUtil;
 import com.example.proxy.service.UserService;
 import io.jsonwebtoken.impl.DefaultClaims;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 @AllArgsConstructor
 public class AuthHandler {
-    @Autowired
     private JwtUtil jwtUtil;
-    @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
     private UserService userService;
 
 

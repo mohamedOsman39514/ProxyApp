@@ -2,29 +2,25 @@ package com.example.proxy.rest.handler;
 
 import com.example.proxy.model.ServiceDefinition;
 import com.example.proxy.rest.dto.ServiceDefinitionDto;
-import com.example.proxy.rest.exception.SQLException;
+import com.example.proxy.rest.dto.common.PaginationResponse;
 import com.example.proxy.rest.exception.ResourceNotFound;
 import com.example.proxy.rest.mapper.ServiceDefinitionMapper;
 import com.example.proxy.service.ServiceDefinitionService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
 public class ServiceDefinitionHandler {
 
-
-//    @Autowired
     private ServiceDefinitionMapper serviceDefinitionMapper;
-
-//    @Autowired
     private ServiceDefinitionService serviceDefinitionService;
 
-//    @Autowired
-    private SQLException psqlException;
 
 //    public ResponseEntity<?> create(ServiceDefinitionDto serviceDefinitionDto) {
 //        try {
@@ -53,9 +49,19 @@ public class ServiceDefinitionHandler {
         return ResponseEntity.ok(serviceDefinitionDto);
     }
 
-    public ResponseEntity<List<?>> getAll() {
-        List<ServiceDefinitionDto> serviceDefinitionDtoList = serviceDefinitionMapper.toServiceDefinitionDtos(serviceDefinitionService.findAll());
-        return ResponseEntity.ok(serviceDefinitionDtoList);
+    public ResponseEntity<?> getAll(Integer pageNo, Integer pageSize){
+        Page<ServiceDefinition> serviceDefinitions = serviceDefinitionService.getAll(pageNo, pageSize);
+        List<ServiceDefinition> serviceDefinitionList = serviceDefinitions.getContent();
+        List<ServiceDefinitionDto> content= serviceDefinitionList.stream()
+                .map(serviceDefinition ->  serviceDefinitionMapper.toServiceDefinitionDto(serviceDefinition)).collect(Collectors.toList());
+        PaginationResponse paginationResponse = new PaginationResponse();
+        paginationResponse.setContent(content);
+        paginationResponse.setPageNo(serviceDefinitions.getNumber()+1);
+        paginationResponse.setPageSize(serviceDefinitions.getSize());
+        paginationResponse.setTotalElements(serviceDefinitions.getTotalElements());
+        paginationResponse.setTotalPages(serviceDefinitions.getTotalPages());
+
+        return ResponseEntity.ok(paginationResponse);
     }
 
 //    public ResponseEntity<?> delete(Long id) throws ResourceNotFound {

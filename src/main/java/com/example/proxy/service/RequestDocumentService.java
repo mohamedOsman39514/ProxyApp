@@ -1,10 +1,13 @@
 package com.example.proxy.service;
 
+import com.example.proxy.model.Job;
 import com.example.proxy.model.RequestDocument;
 import com.example.proxy.repository.RequestDocumentRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,11 +36,9 @@ public class RequestDocumentService {
         return requestDocumentRepository.findById(id);
     }
 
-    public List<RequestDocument> findAll()
-    {
-        return requestDocumentRepository.findAll();
+    public Page<RequestDocument> getAll(Integer page, Integer size) {
+        return requestDocumentRepository.findAll(PageRequest.of(page, size));
     }
-
     public void deleteById(Long id)
     {
         requestDocumentRepository.deleteById(id);

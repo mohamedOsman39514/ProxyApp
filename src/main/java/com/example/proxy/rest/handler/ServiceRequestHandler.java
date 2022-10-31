@@ -1,9 +1,8 @@
 package com.example.proxy.rest.handler;
 
-import com.example.proxy.model.Request;
-import com.example.proxy.model.ServiceRequest;
-import com.example.proxy.model.User;
+import com.example.proxy.model.*;
 import com.example.proxy.rest.dto.ServiceRequestDto;
+import com.example.proxy.rest.dto.common.PaginationResponse;
 import com.example.proxy.rest.exception.SQLException;
 import com.example.proxy.rest.exception.ResourceNotFound;
 import com.example.proxy.rest.exception.Response;
@@ -12,32 +11,24 @@ import com.example.proxy.service.RequestService;
 import com.example.proxy.service.ServiceRequestService;
 import com.example.proxy.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
 public class ServiceRequestHandler {
 
-//    @Autowired
     private ServiceRequestMapper serviceRequestMapper;
-
-//    @Autowired
     private ServiceRequestService serviceRequestService;
-
-//    @Autowired
     private RequestService requestService;
-
-//    @Autowired
     private UserService userService;
 
-//    @Autowired
-    private SQLException psqlException;
 
     public ResponseEntity<?> create(ServiceRequestDto serviceRequestDto) {
         try {
@@ -45,19 +36,10 @@ public class ServiceRequestHandler {
             User user = userService.findByEmail(email);
             ServiceRequest serviceRequest = serviceRequestMapper.toServiceRequest(serviceRequestDto);
             Request request = requestService.findById(serviceRequest.getRequest().getId()).get();
-//            if(request.getUser().getId() != user.getId()){
-//                return ResponseEntity.status(HttpStatus.FOUND).body(new Response("This Request Not Belongs to You"));
-//            }
-//            if(request.getStatus() == null){
-//                return ResponseEntity.status(HttpStatus.FOUND).body(new Response("Your Request Under Investigation"));
-//            } else if (request.getStatus() == false) {
-//                return ResponseEntity.status(HttpStatus.FOUND).body(new Response("Your Request Refused"));
-//            }
             serviceRequestService.save(serviceRequest);
             return ResponseEntity.status(HttpStatus.CREATED).body(serviceRequest);
         } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                    new Response(psqlException.getError(ex)));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new SQLException(ex));
         }
     }
 
@@ -80,9 +62,18 @@ public class ServiceRequestHandler {
         return ResponseEntity.ok(serviceRequestDto);
     }
 
-    public ResponseEntity<List<?>> getAll() {
-        List<ServiceRequestDto> requestDtoList = serviceRequestMapper.toServiceRequestDtos(serviceRequestService.findAll());
-        return ResponseEntity.ok(requestDtoList);
+    public ResponseEntity<?> getAll(Integer pageNo, Integer pageSize){
+        Page<ServiceRequest> requests = serviceRequestService.getAll(pageNo, pageSize);
+        List<ServiceRequest> requestList = requests.getContent();
+        List<ServiceRequestDto> content= requestList.stream().map(serviceRequest ->  serviceRequestMapper.toServiceRequestDto(serviceRequest)).collect(Collectors.toList());
+        PaginationResponse paginationResponse = new PaginationResponse();
+        paginationResponse.setContent(content);
+        paginationResponse.setPageNo(requests.getNumber()+1);
+        paginationResponse.setPageSize(requests.getSize());
+        paginationResponse.setTotalElements(requests.getTotalElements());
+        paginationResponse.setTotalPages(requests.getTotalPages());
+
+        return ResponseEntity.ok(paginationResponse);
     }
 
     public ResponseEntity<?> delete(Long id) throws ResourceNotFound {

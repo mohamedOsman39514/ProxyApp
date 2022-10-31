@@ -2,13 +2,14 @@ package com.example.proxy.rest.handler;
 
 import com.example.proxy.model.Role;
 import com.example.proxy.rest.dto.RoleDto;
+import com.example.proxy.rest.dto.common.PaginationResponse;
 import com.example.proxy.rest.exception.ResourceNotFound;
 import com.example.proxy.rest.mapper.RoleMapper;
 import com.example.proxy.service.RoleService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,13 +28,17 @@ public class RoleHandler {
         return ResponseEntity.ok(roleDto);
     }
 
-    public ResponseEntity<List<?>> getAll() {
-        List<RoleDto> toRoleDtos = roleMapper.toRoleDtos(roleService.findAll());
-        return ResponseEntity.ok(toRoleDtos);
-    }
+    public ResponseEntity<?> getAll(Integer pageNo, Integer pageSize){
+        Page<Role> roles = roleService.getAll(pageNo, pageSize);
+        List<Role> roleList = roles.getContent();
+        List<RoleDto> content= roleList.stream().map(role ->  roleMapper.toRoleDto(role)).collect(Collectors.toList());
+        PaginationResponse paginationResponse = new PaginationResponse();
+        paginationResponse.setContent(content);
+        paginationResponse.setPageNo(roles.getNumber()+1);
+        paginationResponse.setPageSize(roles.getSize());
+        paginationResponse.setTotalElements(roles.getTotalElements());
+        paginationResponse.setTotalPages(roles.getTotalPages());
 
-    public List<RoleDto> getRoles(Integer page, Integer size) {
-        List<Role> roles = roleService.getPostsList(page, size);
-        return roles.stream().map(role -> roleMapper.toRoleDto(role)).collect(Collectors.toList());
+        return ResponseEntity.ok(paginationResponse);
     }
 }
