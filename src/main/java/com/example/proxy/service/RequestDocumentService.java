@@ -1,11 +1,8 @@
 package com.example.proxy.service;
 
-import com.example.proxy.model.Job;
-import com.example.proxy.model.RequestDocument;
+import com.example.proxy.entity.RequestDocument;
 import com.example.proxy.repository.RequestDocumentRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

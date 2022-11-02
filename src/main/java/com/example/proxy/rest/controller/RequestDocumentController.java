@@ -1,6 +1,5 @@
 package com.example.proxy.rest.controller;
 
-import com.example.proxy.rest.exception.ResourceNotFound;
 import com.example.proxy.rest.handler.RequestDocumentHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,14 +21,16 @@ public class RequestDocumentController {
 
     @PostMapping("/{id}/request")
     @Operation(summary = "upload document by the request id")
-    public ResponseEntity<?> uploadDocument(@PathVariable Long id, @RequestParam("file") MultipartFile file,@RequestParam("desc") String desc) throws IOException, ResourceNotFound {
+    public ResponseEntity<?> uploadDocument(@PathVariable Long id,
+                                            @RequestParam("file") MultipartFile file,
+                                            @RequestParam("description") String desc) throws IOException {
         return requestDocumentHandler.upload(id, file,desc);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "update document")
-    public ResponseEntity<?> updateDocument(@PathVariable Long id,@RequestParam("file") MultipartFile file)
-            throws IOException, ResourceNotFound {
+    public ResponseEntity<?> updateDocument(@PathVariable Long id,
+                                            @RequestParam("file") MultipartFile file) throws IOException {
         return requestDocumentHandler.update(id, file);
     }
 
@@ -41,7 +42,7 @@ public class RequestDocumentController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "delete document By Id")
-    public ResponseEntity<?> delete(@PathVariable Long id) throws ResourceNotFound {
+    public ResponseEntity<?> delete(@PathVariable Long id)   {
         return requestDocumentHandler.delete(id);
     }
 

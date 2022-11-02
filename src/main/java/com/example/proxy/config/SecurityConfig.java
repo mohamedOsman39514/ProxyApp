@@ -1,9 +1,9 @@
 package com.example.proxy.config;
 
 
-import com.example.proxy.security.jwt.JwtFilter;
-import com.example.proxy.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.proxy.security.CustomUserDetailsService;
+import com.example.proxy.security.JwtFilter;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -20,20 +19,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
-    @Autowired
     private JwtFilter jwtFilter;
-
-    @Autowired
-    private UserService userService;
+    private CustomUserDetailsService customUserDetailsService;
 
 
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(new BCryptPasswordEncoder());
+        auth.userDetailsService(customUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Override
@@ -72,8 +69,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/user/forgetPassword","/document/**")
                 .permitAll()
                 .antMatchers(AUTH_WHITELIST)
-                .permitAll()
-                .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

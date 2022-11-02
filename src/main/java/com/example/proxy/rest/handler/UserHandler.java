@@ -1,13 +1,12 @@
 package com.example.proxy.rest.handler;
 
-import com.example.proxy.model.PasswordResetToken;
-import com.example.proxy.model.User;
+import com.example.proxy.entity.PasswordResetToken;
+import com.example.proxy.entity.User;
 import com.example.proxy.rest.dto.UserDto;
-import com.example.proxy.rest.dto.common.PaginationResponse;
-import com.example.proxy.rest.exception.SQLException;
-import com.example.proxy.rest.exception.ResourceNotFound;
-import com.example.proxy.rest.exception.Response;
-import com.example.proxy.rest.mapper.UserMapper;
+import com.example.proxy.rest.dto.common.PaginationReultDto;
+import com.example.proxy.rest.entitymapper.common.PaginationMapper;
+import com.example.proxy.rest.exception.*;
+import com.example.proxy.rest.entitymapper.UserMapper;
 import com.example.proxy.security.PasswordUtil;
 import com.example.proxy.service.PasswordTokenService;
 import com.example.proxy.service.UserService;
@@ -25,7 +24,6 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -37,25 +35,26 @@ public class UserHandler {
     private PasswordTokenService passwordTokenService;
     private EmailService emailService;
     private PasswordUtil passwordUtil;
-
+    private PaginationMapper paginationMapper;
 
     public ResponseEntity<?> register(UserDto userDto) {
         try {
             log.info("create a new user");
-            User user = userMapper.toUser(userDto);
+            User user = userMapper.toEntity(userDto);
             userService.register(user);
-            return ResponseEntity.status(HttpStatus.CREATED).body(user);
+            UserDto dto=userMapper.toDto(user);
+            return ResponseEntity.status(HttpStatus.CREATED).body(dto);
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new SQLException(ex));
         }
     }
 
-    public ResponseEntity<?> update(Long id, UserDto userDto) throws ResourceNotFound {
-        User user = userMapper.toUser(userDto);
+    public ResponseEntity<?> update(Long id, UserDto userDto) {
+        User user = userMapper.toEntity(userDto);
         User userById = userService.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("user of id " + id + " Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException(User.class.getSimpleName(),id));
         userById.setName(user.getName() != null ? user.getName() : userById.getName());
-        userById.setEmail(user.getEmail() != null ? user.getEmail() : userById.getEmail());
+        userById.setUsername(user.getUsername() != null ? user.getUsername() : userById.getUsername());
         userById.setNationalId(user.getNationalId() != null ? user.getNationalId() : userById.getNationalId());
         userById.setPhone(user.getPhone() != null ? user.getPhone() : userById.getPhone());
         userById.setJob(user.getJob() != null ? user.getJob() : userById.getJob());
@@ -65,45 +64,48 @@ public class UserHandler {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(userById);
     }
 
-    public ResponseEntity<?> getById(Long id) throws ResourceNotFound {
+    public ResponseEntity<?> getById(Long id) {
+        log.info("get user by id");
         User user = userService.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("The user of id " + id + " Not Found"));
-        UserDto userDto = userMapper.toUserDto(user);
+                .orElseThrow(() -> new ResourceNotFoundException(User.class.getSimpleName(),id));
+        UserDto userDto = userMapper.toDto(user);
         return ResponseEntity.ok(userDto);
     }
 
     public ResponseEntity<?> getAll(Integer pageNo, Integer pageSize){
+        log.info("get all users");
         Page<User> users = userService.getAll(pageNo, pageSize);
-        List<User> userList = users.getContent();
-        List<UserDto> content= userList.stream().map(user  ->  userMapper.toUserDto(user)).collect(Collectors.toList());
-        PaginationResponse paginationResponse = new PaginationResponse();
-        paginationResponse.setContent(content);
-        paginationResponse.setPageNo(users.getNumber()+1);
-        paginationResponse.setPageSize(users.getSize());
-        paginationResponse.setTotalElements(users.getTotalElements());
-        paginationResponse.setTotalPages(users.getTotalPages());
-
-        return ResponseEntity.ok(paginationResponse);
+        List<UserDto> content= userMapper.toDto(users.getContent());
+        PaginationReultDto paginatedResult = new PaginationReultDto();
+        paginatedResult.setData(content);
+        paginatedResult.setPagination(paginationMapper.toPaginationDto(users));
+        return ResponseEntity.ok(paginatedResult);
     }
 
-    public ResponseEntity<?> delete(Long id) throws ResourceNotFound {
-        User serviceType = userService.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("user of id " + id + " Not Found"));
-        userService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response("deleted"));
+    public ResponseEntity<?> delete(Long id) {
+        log.info("delete by id");
+        userService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(User.class.getSimpleName(),id));
+        try {
+            userService.deleteById(id);
+        } catch (Exception exception) {
+            throw new ResourceRelatedException(User.class.getSimpleName(), "Id", id.toString(), ErrorCodes.RELATED_RESOURCE.getCode());
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response("deleted"));
     }
 
-    public ResponseEntity<?> forgetPassword(UserDto userDto, HttpServletRequest request ) throws ResourceNotFound {
-        User user = userMapper.toUser(userDto);
-        User userByEmail = userService.findByEmail(user.getEmail());
+    public ResponseEntity<?> forgetPassword(UserDto userDto, HttpServletRequest request ) {
+        log.info("user user forget password ");
+        User user = userMapper.toEntity(userDto);
+        User userByEmail = userService.findByUsername(user.getUsername());
         if (userByEmail == null) {
-            throw new ResourceNotFound("user of email: "+ user.getEmail() +" Not Found");
+            throw new ResourceNotFoundException(User.class.getSimpleName(),user.getUsername());
         }
         String token = UUID.randomUUID().toString();
         passwordTokenService.createPasswordResetTokenForUser(userByEmail, token);
         String appUrl = "http://"+ request.getServerName() + ":" + request.getServerPort() +"/user/resetpassword/"+token;
         EmailDetails details = new EmailDetails();
-        details.setRecipient(user.getEmail());
+        details.setRecipient(user.getUsername());
         details.setSubject("Reset your password");
         details.setMsgBody("Forgot your password? Submit a PATCH request with your new password and to:" + appUrl +
                 "\nIf you didn't forget your password, please ignore this email!");
@@ -112,7 +114,8 @@ public class UserHandler {
     }
 
     public ResponseEntity<?> resetPassword(UserDto userDto, String resetToken){
-        User user = userMapper.toUser(userDto);
+        log.info("user reset password");
+        User user = userMapper.toEntity(userDto);
         PasswordResetToken token = passwordTokenService.getResetToken(resetToken);
         if(token.getToken().isEmpty()){
             return ResponseEntity.status(404).body(new Response("This reset token not found......"));
@@ -121,18 +124,19 @@ public class UserHandler {
         if(result != null){
             return  ResponseEntity.status(401).body(new Response("Reset Token Expired......"));
         }
-        String email = token.getUser().getEmail();
+        String email = token.getUser().getUsername();
         userService.updatePassword(email,user.getPassword());
         return ResponseEntity.status(200).body(new Response("the password changed....."));
     }
 
     public ResponseEntity<?> changeUserPassword(UserDto userDto, String newPassword) {
-        User user = userMapper.toUser(userDto);
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userId = userService.findByEmail(email);
+        log.info("user update password");
+        User user = userMapper.toEntity(userDto);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userId = userService.findByUsername(username);
         BCryptPasswordEncoder passwordEncoder =new BCryptPasswordEncoder();
         if(passwordEncoder.matches(user.getPassword(),userId.getPassword())){
-            userService.updatePassword(email,newPassword);
+            userService.updatePassword(username,newPassword);
             return ResponseEntity.status(200).body(new Response("successfully updated......"));
         }
         else return ResponseEntity.status(403).body(new Response("incorrect password"));

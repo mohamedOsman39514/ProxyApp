@@ -1,21 +1,24 @@
 package com.example.proxy.rest.handler;
 
-import com.example.proxy.model.Request;
+import com.example.proxy.entity.Request;
+import com.example.proxy.entity.Status;
+import com.example.proxy.entity.User;
 import com.example.proxy.rest.dto.RequestDto;
-import com.example.proxy.rest.dto.common.PaginationResponse;
-import com.example.proxy.rest.exception.SQLException;
-import com.example.proxy.rest.exception.ResourceNotFound;
-import com.example.proxy.rest.exception.Response;
-import com.example.proxy.rest.mapper.RequestMapper;
+import com.example.proxy.rest.dto.common.PaginationReultDto;
+import com.example.proxy.rest.entitymapper.common.PaginationMapper;
+import com.example.proxy.rest.exception.*;
+import com.example.proxy.rest.entitymapper.RequestMapper;
 import com.example.proxy.service.RequestService;
+import com.example.proxy.service.StatusService;
+import com.example.proxy.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -23,52 +26,75 @@ public class RequestHandler {
 
     private RequestMapper requestMapper;
     private RequestService requestService;
-
+    private StatusService statusService;
+    private UserService userService;
+    private PaginationMapper paginationMapper;
 
     public ResponseEntity<?> create(RequestDto requestDto) {
         try {
-            Request request = requestMapper.toRequest(requestDto);
+            Request request = requestMapper.toEntity(requestDto);
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.findByUsername(username);
+            Status status = statusService.findById(1L)
+                    .orElseThrow(() -> new ResourceNotFoundException(Status.class.getSimpleName(),1L));
+            request.setCreatedBy(user.getName());
+            request.setStatus(status);
+            request.setRequester(user);
             requestService.save(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(request);
+            return ResponseEntity.status(HttpStatus.CREATED).body(requestMapper.toDto(request));
         } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new SQLException(ex));
         }
     }
 
-    public ResponseEntity<?> update(Long id, RequestDto requestDto) throws ResourceNotFound {
-        Request request = requestMapper.toRequest(requestDto);
+    public ResponseEntity<?> updateRequestStatus(Long id, RequestDto requestDto) {
+        Request request = requestMapper.toEntity(requestDto);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByUsername(username);
         Request requestById = requestService.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("request of id " + id + " Not Found"));
-        requestById.setStatus(request.getStatus() == null ? request.getStatus() : requestById.getStatus());
+                .orElseThrow(() -> new ResourceNotFoundException(Request.class.getSimpleName(),id));
+        Status status = statusService.findById(request.getStatus().getId())
+                .orElseThrow(() -> new ResourceNotFoundException(Status.class.getSimpleName(),request.getStatus().getId()));
+        requestById.setStatus(status);
+        requestById.setUpdatedBy(user.getName());
         requestService.save(requestById);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(requestById);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(status);
     }
 
-    public ResponseEntity<RequestDto> getById(Long id) throws ResourceNotFound {
+    public ResponseEntity<RequestDto> getById(Long id) {
         Request request = requestService.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("The request of id " + id + " Not Found"));
-        RequestDto requestDto = requestMapper.toRequestDto(request);
+                .orElseThrow(() -> new ResourceNotFoundException(Request.class.getSimpleName(),id));
+        RequestDto requestDto = requestMapper.toDto(request);
         return ResponseEntity.ok(requestDto);
     }
 
     public ResponseEntity<?> getAll(Integer pageNo, Integer pageSize){
         Page<Request> requests = requestService.getAll(pageNo, pageSize);
-        List<Request> requestList = requests.getContent();
-        List<RequestDto> content= requestList.stream().map(request ->  requestMapper.toRequestDto(request)).collect(Collectors.toList());
-        PaginationResponse paginationResponse = new PaginationResponse();
-        paginationResponse.setContent(content);
-        paginationResponse.setPageNo(requests.getNumber()+1);
-        paginationResponse.setPageSize(requests.getSize());
-        paginationResponse.setTotalElements(requests.getTotalElements());
-        paginationResponse.setTotalPages(requests.getTotalPages());
-
-        return ResponseEntity.ok(paginationResponse);
+        List<RequestDto> content= requestMapper.toDto(requests.getContent());
+        PaginationReultDto paginatedResult = new PaginationReultDto();
+        paginatedResult.setData(content);
+        paginatedResult.setPagination(paginationMapper.toPaginationDto(requests));
+        return ResponseEntity.ok(paginatedResult);
     }
 
-    public ResponseEntity<?> delete(Long id) throws ResourceNotFound {
-        Request request = requestService.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("request of id " + id + " Not Found"));
-        requestService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response("deleted"));
+    public ResponseEntity<?> getAllByStatus(String statusName,Integer pageNo, Integer pageSize){
+        Page<Request> requests = requestService.getByStatusName(statusName,pageNo, pageSize);
+        List<RequestDto> content= requestMapper.toDto(requests.getContent());
+        PaginationReultDto paginatedResult = new PaginationReultDto();
+        paginatedResult.setData(content);
+        paginatedResult.setPagination(paginationMapper.toPaginationDto(requests));
+        return ResponseEntity.ok(paginatedResult);
     }
+
+    public ResponseEntity<?> delete(Long id) {
+        requestService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(Request.class.getSimpleName(),id));
+        try {
+            requestService.deleteById(id);
+        } catch (Exception exception) {
+            throw new ResourceRelatedException(Request.class.getSimpleName(), "Id", id.toString(), ErrorCodes.RELATED_RESOURCE.getCode());
+        }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response("deleted"));
+    }
+
 }

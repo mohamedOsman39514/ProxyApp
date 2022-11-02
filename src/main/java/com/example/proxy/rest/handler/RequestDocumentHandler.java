@@ -1,13 +1,13 @@
 package com.example.proxy.rest.handler;
 
-import com.example.proxy.model.RequestDocument;
-import com.example.proxy.model.Request;
+import com.example.proxy.entity.RequestDocument;
+import com.example.proxy.entity.Request;
 import com.example.proxy.rest.dto.RequestDocumentDto;
 import com.example.proxy.rest.dto.RequestDto;
-import com.example.proxy.rest.exception.ResourceNotFound;
+import com.example.proxy.rest.exception.ResourceNotFoundException;
 import com.example.proxy.rest.exception.Response;
-import com.example.proxy.rest.mapper.RequestDocumentMapper;
-import com.example.proxy.rest.mapper.RequestMapper;
+import com.example.proxy.rest.entitymapper.RequestDocumentMapper;
+import com.example.proxy.rest.entitymapper.RequestMapper;
 import com.example.proxy.service.RequestDocumentService;
 import com.example.proxy.service.RequestService;
 import com.example.proxy.utils.DocumentUtil;
@@ -30,26 +30,25 @@ public class RequestDocumentHandler {
     private RequestMapper requestMapper;
     private RequestService requestService;
 
-
-    public ResponseEntity<?> upload(Long id, MultipartFile file, String decs) throws IOException, ResourceNotFound {
+    public ResponseEntity<?> upload(Long id, MultipartFile file, String decs) throws IOException {
         Request request = requestService.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("The Request of id " + id + " Not Found"));
-        RequestDto requestDto = requestMapper.toRequestDto(request);
+                .orElseThrow(() -> new ResourceNotFoundException(Request.class.getSimpleName(),id));
+        RequestDto requestDto = requestMapper.toDto(request);
         RequestDocumentDto requestDocumentDto = new RequestDocumentDto();
         requestDocumentDto.setDescription(decs);
         requestDocumentDto.setName(file.getOriginalFilename());
         requestDocumentDto.setType(file.getContentType());
         requestDocumentDto.setFile(DocumentUtil.compressFile(file.getBytes()));
         requestDocumentDto.setRequest(requestDto);
-        RequestDocument document = documentMapper.toDocument(requestDocumentDto);
+        RequestDocument document = documentMapper.toEntity(requestDocumentDto);
         requestDocumentService.save(document);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new Response("Document uploaded successfully: " + file.getOriginalFilename()));
     }
 
-    public ResponseEntity<?> update(Long id, MultipartFile file) throws IOException, ResourceNotFound {
+    public ResponseEntity<?> update(Long id, MultipartFile file) throws IOException {
         RequestDocument document = requestDocumentService.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("document of id " + id + " Not Found"));
+                .orElseThrow(() -> new ResourceNotFoundException(RequestDocument.class.getSimpleName(),id));
 //        document.setDescription(description);
         document.setName(file.getOriginalFilename());
         document.setType(file.getContentType());
@@ -69,15 +68,15 @@ public class RequestDocumentHandler {
     }
 
     public ResponseEntity<List<?>> getByDescription(String description) {
-        List<RequestDocumentDto> requestDocuments = documentMapper.toDocumentDtos(requestDocumentService.searchDocumentByDescription(description));
+        List<RequestDocumentDto> requestDocuments = documentMapper.toDto(requestDocumentService.searchDocumentByDescription(description));
         return ResponseEntity.ok(requestDocuments);
     }
 
-    public ResponseEntity<?> delete(Long id) throws ResourceNotFound {
-        RequestDocument requestDocument = requestDocumentService.findById(id)
-                .orElseThrow(() -> new ResourceNotFound("Document of id " + id + " Not Found"));
+    public ResponseEntity<?> delete(Long id) {
+        requestDocumentService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(RequestDocument.class.getSimpleName(),id));
         requestDocumentService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response("deleted"));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new Response("deleted"));
     }
 
 }

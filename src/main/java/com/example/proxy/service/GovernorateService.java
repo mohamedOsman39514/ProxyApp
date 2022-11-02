@@ -1,14 +1,12 @@
 package com.example.proxy.service;
 
-import com.example.proxy.model.Governorate;
-import com.example.proxy.model.Job;
+import com.example.proxy.entity.Governorate;
 import com.example.proxy.repository.GovernorateRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service

@@ -1,15 +1,17 @@
 package com.example.proxy.security;
 
-import com.example.proxy.model.PasswordResetToken;
+import com.example.proxy.entity.PasswordResetToken;
 import com.example.proxy.service.PasswordTokenService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
 @Component
+@AllArgsConstructor
 public class PasswordUtil {
 
-    @Autowired
+
     private PasswordTokenService passwordTokenService;
 
     public String validatePasswordResetToken(String token) {
