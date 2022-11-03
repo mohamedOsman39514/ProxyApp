@@ -15,11 +15,12 @@ public class GovernorateService {
 
     private GovernorateRepository governorateRepository;
 
-    public Optional<Governorate> findById(Long id) {
+    public Optional<Governorate> getById(Long id) {
         return governorateRepository.findById(id);
     }
 
     public Page<Governorate> getAll(Integer page, Integer size) {
         return governorateRepository.findAll(PageRequest.of(page, size));
     }
+
 }

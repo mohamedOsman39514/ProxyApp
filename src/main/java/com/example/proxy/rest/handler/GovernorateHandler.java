@@ -23,7 +23,7 @@ public class GovernorateHandler {
     private PaginationMapper paginationMapper;
 
     public ResponseEntity<?> getById(Long id) {
-        Governorate governorate = governorateService.findById(id)
+        Governorate governorate = governorateService.getById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Governorate.class.getSimpleName(),id));
         GovernorateDto governorateDto = governorateMapper.toDto(governorate);
         return ResponseEntity.ok(governorateDto);

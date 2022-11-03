@@ -16,28 +16,23 @@ public class RequestDocumentService {
 
     private RequestDocumentRepository requestDocumentRepository;
 
-
-    public RequestDocument save(RequestDocument document) {
-        return requestDocumentRepository.save(document);
+    public RequestDocument save(RequestDocument requestDocument) {
+        return requestDocumentRepository.save(requestDocument);
     }
 
-    public RequestDocument findDocumentByName(String name) {
-        return requestDocumentRepository.findDocumentByName(name);
+    public Page<RequestDocument> getDocumentByDescription(String description, Integer page, Integer size) {
+        return requestDocumentRepository.findByDescription(description, PageRequest.of(page, size));
     }
 
-    public List<RequestDocument> searchDocumentByDescription(String description){
-        return requestDocumentRepository.searchByDescription(description);
-    }
-
-    public Optional<RequestDocument> findById(Long id) {
+    public Optional<RequestDocument> getById(Long id) {
         return requestDocumentRepository.findById(id);
     }
 
     public Page<RequestDocument> getAll(Integer page, Integer size) {
         return requestDocumentRepository.findAll(PageRequest.of(page, size));
     }
-    public void deleteById(Long id)
-    {
+
+    public void deleteById(Long id) {
         requestDocumentRepository.deleteById(id);
     }
 

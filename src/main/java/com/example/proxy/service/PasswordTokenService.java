@@ -3,6 +3,7 @@ package com.example.proxy.service;
 import com.example.proxy.entity.PasswordResetToken;
 import com.example.proxy.entity.User;
 import com.example.proxy.repository.PasswordTokenRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,9 +14,9 @@ import java.util.Date;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class PasswordTokenService {
 
-//    @Autowired
     private PasswordTokenRepository passwordTokenRepository;
 
     @Value("${jwt.resetTokenExpiration}")
@@ -33,4 +34,5 @@ public class PasswordTokenService {
     public PasswordResetToken getResetToken(String Token) {
         return passwordTokenRepository.findByToken(Token);
     }
+
 }

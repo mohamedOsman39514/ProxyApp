@@ -14,6 +14,8 @@ public class RequestDocumentDto extends RestDto {
 
     private String description;
 
+    private DocumentTypeDto documentType;
+
     private RequestDto request;
 
 }

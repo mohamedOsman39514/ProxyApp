@@ -16,8 +16,6 @@ public class UserService  {
 
     private UserRepository userRepository;
 
-
-
     public User register(User user) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodePassword = passwordEncoder.encode(user.getPassword());
@@ -33,7 +31,7 @@ public class UserService  {
         userRepository.save(user);
     }
 
-    public User findByUsername(String email) {
+    public User getByUsername(String email) {
         return userRepository.findByUsername(email);
     }
 
@@ -41,7 +39,7 @@ public class UserService  {
         return userRepository.save(user);
     }
 
-    public Optional<User> findById(Long id) {
+    public Optional<User> getById(Long id) {
         return userRepository.findById(id);
     }
 

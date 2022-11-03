@@ -19,9 +19,10 @@ public class GovernorateController {
     @GetMapping
     @Operation(summary = "get all governorate")
     public ResponseEntity<?> getAll(@RequestParam(value = "page") Integer pageNo,
-                                    @RequestParam(value = "size") Integer pageSize){
-        return governorateHandler.getAll(pageNo , pageSize);
+                                    @RequestParam(value = "size") Integer pageSize) {
+        return governorateHandler.getAll(pageNo, pageSize);
     }
+
     @GetMapping("/{id}")
     @Operation(summary = "get governorate By Id")
     public ResponseEntity<?> getById(@PathVariable(value = "id") Long id) {

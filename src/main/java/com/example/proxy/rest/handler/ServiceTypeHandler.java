@@ -24,7 +24,7 @@ public class ServiceTypeHandler {
 
     public ResponseEntity<?> getById(Long id)
             throws ResourceNotFoundException {
-        ServiceType serviceType = serviceTypeService.findById(id)
+        ServiceType serviceType = serviceTypeService.getById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ServiceType.class.getSimpleName(),id));
         ServiceTypeDto serviceTypeDto = serviceTypeMapper.toDto(serviceType);
         return ResponseEntity.ok(serviceTypeDto);

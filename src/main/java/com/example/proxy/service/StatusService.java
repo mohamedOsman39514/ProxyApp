@@ -13,24 +13,14 @@ import java.util.Optional;
 @AllArgsConstructor
 public class StatusService {
 
-//    @Autowired
     private StatusRepository statusRepository;
 
-
-//    public Status save(Status status) {
-//        return statusRepository.save(status);
-//    }
-
-    public Optional<Status> findById(Long id) {
+    public Optional<Status> getById(Long id) {
         return statusRepository.findById(id);
     }
 
     public Page<Status> getAll(Integer page, Integer size) {
         return statusRepository.findAll(PageRequest.of(page, size));
     }
-//    public void deleteById(Long id)
-//    {
-//        statusRepository.deleteById(id);
-//    }
 
 }

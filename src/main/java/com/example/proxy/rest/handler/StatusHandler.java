@@ -23,7 +23,7 @@ public class StatusHandler {
     private PaginationMapper paginationMapper;
 
     public ResponseEntity<?> getById(Long id) {
-        Status status = statusService.findById(id)
+        Status status = statusService.getById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Status.class.getSimpleName(),id));
         StatusDto statusDto = statusMapper.toDto(status);
         return ResponseEntity.ok(statusDto);

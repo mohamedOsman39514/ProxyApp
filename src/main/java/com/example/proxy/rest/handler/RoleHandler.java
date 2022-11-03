@@ -20,11 +20,10 @@ public class RoleHandler {
 
     private RoleService roleService;
     private RoleMapper roleMapper;
-
     private PaginationMapper paginationMapper;
 
     public ResponseEntity<RoleDto> getById(Long id) {
-        Role role = roleService.findById(id)
+        Role role = roleService.getById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(Role.class.getSimpleName(), id));
         RoleDto roleDto = roleMapper.toDto(role);
         return ResponseEntity.ok(roleDto);

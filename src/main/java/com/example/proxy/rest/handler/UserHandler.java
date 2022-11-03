@@ -51,7 +51,7 @@ public class UserHandler {
 
     public ResponseEntity<?> update(Long id, UserDto userDto) {
         User user = userMapper.toEntity(userDto);
-        User userById = userService.findById(id)
+        User userById = userService.getById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(User.class.getSimpleName(),id));
         userById.setName(user.getName() != null ? user.getName() : userById.getName());
         userById.setUsername(user.getUsername() != null ? user.getUsername() : userById.getUsername());
@@ -66,7 +66,7 @@ public class UserHandler {
 
     public ResponseEntity<?> getById(Long id) {
         log.info("get user by id");
-        User user = userService.findById(id)
+        User user = userService.getById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(User.class.getSimpleName(),id));
         UserDto userDto = userMapper.toDto(user);
         return ResponseEntity.ok(userDto);
@@ -84,7 +84,7 @@ public class UserHandler {
 
     public ResponseEntity<?> delete(Long id) {
         log.info("delete by id");
-        userService.findById(id)
+        userService.getById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(User.class.getSimpleName(),id));
         try {
             userService.deleteById(id);
@@ -97,7 +97,7 @@ public class UserHandler {
     public ResponseEntity<?> forgetPassword(UserDto userDto, HttpServletRequest request ) {
         log.info("user user forget password ");
         User user = userMapper.toEntity(userDto);
-        User userByEmail = userService.findByUsername(user.getUsername());
+        User userByEmail = userService.getByUsername(user.getUsername());
         if (userByEmail == null) {
             throw new ResourceNotFoundException(User.class.getSimpleName(),user.getUsername());
         }
@@ -133,7 +133,7 @@ public class UserHandler {
         log.info("user update password");
         User user = userMapper.toEntity(userDto);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User userId = userService.findByUsername(username);
+        User userId = userService.getByUsername(username);
         BCryptPasswordEncoder passwordEncoder =new BCryptPasswordEncoder();
         if(passwordEncoder.matches(user.getPassword(),userId.getPassword())){
             userService.updatePassword(username,newPassword);

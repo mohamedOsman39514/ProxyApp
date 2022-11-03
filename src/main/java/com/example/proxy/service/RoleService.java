@@ -15,7 +15,7 @@ public class RoleService {
 
     private RoleRepository roleRepository;
 
-    public Optional<Role> findById(Long id) {
+    public Optional<Role> getById(Long id) {
         return roleRepository.findById(id);
     }
 

@@ -3,9 +3,11 @@ package com.example.proxy.config;
 
 import com.example.proxy.security.CustomUserDetailsService;
 import com.example.proxy.security.JwtFilter;
+import com.example.proxy.security.RestAuthenticationEntryPoint;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -15,6 +17,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -22,11 +27,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @AllArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-
     private JwtFilter jwtFilter;
     private CustomUserDetailsService customUserDetailsService;
-
-
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -53,29 +56,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             // other public endpoints of your API may be appended to this array
-            "/user/resetPassword/**",
-            "/user/forgetPassword",
-            "/user/updatePassword/**",
-            "/role/**"
+            "/user/**",
+            "/role/**",
+            "/request/**",
+            "/document/**"
     };
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.csrf()
-                .disable()
-                .authorizeRequests()
-                .antMatchers("/login","/user/register" ,
-                        "/user/forgetPassword","/document/**")
-                .permitAll()
-                .antMatchers(AUTH_WHITELIST)
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
+        http.cors().configurationSource(corsConfigurationSource()).and().csrf().disable().exceptionHandling()
+                .authenticationEntryPoint(restAuthenticationEntryPoint);
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.authorizeRequests().antMatchers("/login").permitAll();
+        //for swagger and other public endpoints
+        http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll();
+        http.authorizeRequests().anyRequest().authenticated();
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
     }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+        corsConfiguration.addAllowedMethod(HttpMethod.PUT);
+        corsConfiguration.addAllowedMethod(HttpMethod.DELETE);
+        corsConfiguration.addAllowedMethod(HttpMethod.OPTIONS);
+        corsConfiguration.addAllowedMethod(HttpMethod.PATCH);
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
+    }
+
 }

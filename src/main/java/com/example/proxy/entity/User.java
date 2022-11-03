@@ -1,6 +1,6 @@
 package com.example.proxy.entity;
 
-import com.example.proxy.entity.common.LookupEntity;
+import com.example.proxy.entity.common.AuditingEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends LookupEntity {
+public class User extends AuditingEntity {
 
     @Column
     private String name;

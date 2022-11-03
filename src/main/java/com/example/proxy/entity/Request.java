@@ -1,6 +1,6 @@
 package com.example.proxy.entity;
 
-import com.example.proxy.entity.common.LookupEntity;
+import com.example.proxy.entity.common.AuditingEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,19 +12,19 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Request  extends LookupEntity {
+public class Request  extends AuditingEntity {
 
     @Column
-    private Integer amount;
+    private Float amount;
 
     @Column
-    private Integer deservedAmount;
+    private Float deservedAmount;
 
     @Column
-    private Integer paidAmount;
+    private Float paidAmount;
 
     @Column
-    private Integer remainingAmount;
+    private Float remainingAmount;
 
     @Column
     private LocalDate startDate;

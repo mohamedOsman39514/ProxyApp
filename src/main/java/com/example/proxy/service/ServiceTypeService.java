@@ -1,6 +1,5 @@
 package com.example.proxy.service;
 
-import com.example.proxy.entity.Request;
 import com.example.proxy.entity.ServiceType;
 import com.example.proxy.repository.ServiceTypeRepository;
 import lombok.AllArgsConstructor;
@@ -16,8 +15,7 @@ public class ServiceTypeService {
 
     private ServiceTypeRepository serviceTypeRepository;
 
-
-    public Optional<ServiceType> findById(Long id) {
+    public Optional<ServiceType> getById(Long id) {
         return serviceTypeRepository.findById(id);
     }
 

@@ -15,12 +15,20 @@ public class PartyService {
 
     private PartyRepository partyRepository;
 
-    public Optional<Party> findById(Long id) {
+    public Optional<Party> getById(Long id) {
         return partyRepository.findById(id);
     }
     
     public Page<Party> getAllParties(Integer page, Integer size) {
         return partyRepository.findAll(PageRequest.of(page, size));
+    }
+
+    public Party save(Party party) {
+        return partyRepository.save(party);
+    }
+
+    public void deleteById(Long id) {
+        partyRepository.deleteById(id);
     }
 
 }

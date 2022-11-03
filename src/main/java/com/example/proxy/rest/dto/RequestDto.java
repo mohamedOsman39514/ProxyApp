@@ -9,13 +9,13 @@ import java.time.LocalDate;
 @Data
 public class RequestDto extends RestDto {
 
-    private Integer amount;
+    private Float amount;
 
-    private Integer deservedAmount;
+    private Float deservedAmount;
 
-    private Integer paidAmount;
+    private Float paidAmount;
 
-    private Integer remainingAmount;
+    private Float remainingAmount;
 
     private LocalDate startDate;
 

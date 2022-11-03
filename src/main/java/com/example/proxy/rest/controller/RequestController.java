@@ -18,19 +18,20 @@ public class RequestController {
 
     private RequestHandler requestHandler;
 
+//    @GetMapping
+//    @Operation(summary = "get all requests")
+//    public ResponseEntity<?> getAll(@RequestParam(value = "page") Integer pageNo,
+//                                    @RequestParam(value = "size") Integer pageSize) {
+//        return requestHandler.getAll(pageNo, pageSize);
+//    }
+
     @GetMapping
     @Operation(summary = "get all requests")
-    public ResponseEntity<?> getAll(@RequestParam(value = "page") Integer pageNo,
+    public ResponseEntity<?> getAll(@RequestParam(value = "statusId", required = false) Long statusId,
+                                    @RequestParam(value = "userId", required = false) Long userId,
+                                    @RequestParam(value = "page") Integer pageNo,
                                     @RequestParam(value = "size") Integer pageSize) {
-        return requestHandler.getAll(pageNo, pageSize);
-    }
-
-    @GetMapping("/status/{statusName}")
-    @Operation(summary = "get all requests by status")
-    public ResponseEntity<?> getAllByStatus(@PathVariable(value = "statusName") String statusName,
-                                            @RequestParam(value = "page") Integer pageNo,
-                                            @RequestParam(value = "size") Integer pageSize) {
-        return requestHandler.getAllByStatus(statusName, pageNo, pageSize);
+        return requestHandler.getAll(statusId, userId, pageNo, pageSize);
     }
 
     @GetMapping("/{id}")

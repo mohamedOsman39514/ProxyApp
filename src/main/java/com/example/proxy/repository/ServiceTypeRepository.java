@@ -1,6 +1,5 @@
 package com.example.proxy.repository;
 
-import com.example.proxy.entity.Request;
 import com.example.proxy.entity.ServiceType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

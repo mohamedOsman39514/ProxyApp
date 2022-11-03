@@ -23,7 +23,7 @@ public class ServiceDefinitionHandler {
     private PaginationMapper paginationMapper;
 
     public ResponseEntity<?> getById(Long id) {
-        ServiceDefinition serviceDefinition = serviceDefinitionService.findById(id)
+        ServiceDefinition serviceDefinition = serviceDefinitionService.getById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(ServiceDefinition.class.getSimpleName(),id));
         ServiceDefinitionDto serviceDefinitionDto = serviceDefinitionMapper.toDto(serviceDefinition);
         return ResponseEntity.ok(serviceDefinitionDto);

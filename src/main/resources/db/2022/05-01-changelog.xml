@@ -30,5 +30,6 @@
             <column name="name" value="اقرار خصم"/>
             <column name="service_id" value="2"/>
         </insert>
+
     </changeSet>
 </databaseChangeLog>

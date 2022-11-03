@@ -14,17 +14,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@OpenAPIDefinition(info=@Info(title="Proxy Application"))
-//@SecurityScheme(name = "javainuseapi", scheme = "basic", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
+@OpenAPIDefinition(info=@Info(title="Administrative Prosecution Advisers Club"))
 public class ProxyApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProxyApplication.class, args);
 	}
 
-	@Bean
-	public PasswordEncoder passwordEncoder(){
-		return NoOpPasswordEncoder.getInstance();
-	}
+//	@Bean
+//	public PasswordEncoder passwordEncoder(){
+//		return NoOpPasswordEncoder.getInstance();
+//	}
 
 }

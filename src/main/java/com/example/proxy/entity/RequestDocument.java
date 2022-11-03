@@ -1,6 +1,6 @@
 package com.example.proxy.entity;
 
-import com.example.proxy.entity.common.LookupEntity;
+import com.example.proxy.entity.common.AuditingEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestDocument extends LookupEntity {
+public class RequestDocument extends AuditingEntity {
 
     @Column
     private String name;
@@ -27,6 +27,11 @@ public class RequestDocument extends LookupEntity {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "document_type_id")
+    private DocumentType documentType;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "request_id")
     private Request request;
+
 }

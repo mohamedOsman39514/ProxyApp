@@ -1,19 +1,13 @@
 package com.example.proxy.entity;
 
-import com.example.proxy.entity.common.JPAEntity;
+import com.example.proxy.entity.common.LookupEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class Job extends JPAEntity {
-
-    @Column
-    private String name;
+public class Job extends LookupEntity {
 }

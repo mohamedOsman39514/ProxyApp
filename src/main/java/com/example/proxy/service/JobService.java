@@ -15,11 +15,20 @@ public class JobService {
 
     private JobRepository jobRepository;
 
-    public Optional<Job> findById(Long id) {
+    public Optional<Job> getById(Long id) {
         return jobRepository.findById(id);
     }
 
     public Page<Job> getAll(Integer page, Integer size) {
         return jobRepository.findAll(PageRequest.of(page, size));
     }
+
+    public Job save(Job job) {
+        return jobRepository.save(job);
+    }
+
+    public void deleteById(Long id) {
+        jobRepository.deleteById(id);
+    }
+
 }
